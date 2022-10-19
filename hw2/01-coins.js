@@ -2,6 +2,39 @@
 
 const calculateChange = (input) => {
   // Add your code here
+  if (input > 10) {
+    return `${input} ==> Error: the number is too large`;
+  }
+
+  let dollar = Math.floor(input);
+  let quarter = Math.floor((input % 1) / 0.25);
+  let dime = Math.floor(((input % 1) % 0.25) / 0.1);
+  let nickel = Math.floor((((input % 1) % 0.25) % 0.1) / 0.05);
+  let penny = Math.round(((((input % 1) % 0.25) % 0.1) % 0.05) / 0.01);
+
+  return (
+    `${input} ==> ` +
+    `${dollar ? `${dollar} dollar` + checkSingular(dollar) : ''}` +
+    `${quarter ? `${quarter} quarter` + checkSingular(quarter) : ''}` +
+    `${dime ? `${dime} dime` + checkSingular(dime) : ''}` +
+    `${nickel ? `${nickel} nickel` + checkSingular(nickel) : ''}` +
+    `${penny ? `${penny} penn` + checkSingular(penny) : ''}`
+  );
+
+  // added a function to check for singular to avoid nested ternary
+  function checkSingular(coin) {
+    if (coin === 1) {
+      if (coin === penny) {
+        return 'y, ';
+      }
+      return `, `;
+    } else {
+      if (coin === penny) {
+        return 'ies';
+      }
+      return 's, ';
+    }
+  }
 };
 
 // Sample Test Cases
