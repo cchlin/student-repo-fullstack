@@ -1,4 +1,5 @@
 const http = require('http');
+
 const port = process.env.PORT || 5001;
 
 const server = http.createServer((req, res) => {
@@ -79,7 +80,7 @@ const server = http.createServer((req, res) => {
   else if (req.method === 'GET' && req.url === '/check-cookies') {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
 
-    let found = false;
+    let found = 'no';
     let cookies = req.headers.cookie;
 
     // do here if there is someting in cookie
@@ -90,14 +91,14 @@ const server = http.createServer((req, res) => {
       // go through the cookies list
       cookies.forEach((cookieName) => {
         // split name and value of cookie into [name1, value1]
-        let name = cookieName.split('=');
+        const name = cookieName.split('=');
         if (name[0] === 'hello') {
           // if the name of the cookie is found set the value to true
-          found = true;
+          found = 'yes';
         }
       });
     }
-    found ? res.write('yes') : res.write('no');
+    res.write(found);
     res.end();
   }
 

@@ -1,4 +1,5 @@
 const http = require('http');
+
 const port = process.env.PORT || 5001;
 
 // http://localhost:5001/form should return a form with input elements for username, email, and submit button
@@ -24,7 +25,7 @@ let body = '';
 
 const server = http.createServer((req, res) => {
   const output = (key, value) => {
-    let answer = value ? value : 'n/a';
+    const answer = value || 'n/a';
     res.write(`${key}: ${answer}<br />`);
   };
 
@@ -34,7 +35,7 @@ const server = http.createServer((req, res) => {
     // write the form to the page
     res.write(postHTML);
 
-    //store the data to body
+    // store the data to body
     req.on('data', (chunk) => {
       body += chunk;
     });
