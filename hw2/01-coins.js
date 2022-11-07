@@ -14,25 +14,22 @@ const calculateChange = (input) => {
 
   return (
     `${input} ==> ` +
-    `${dollar ? `${dollar} dollar` + checkSingular(dollar) : ''}` +
-    `${quarter ? `${quarter} quarter` + checkSingular(quarter) : ''}` +
-    `${dime ? `${dime} dime` + checkSingular(dime) : ''}` +
-    `${nickel ? `${nickel} nickel` + checkSingular(nickel) : ''}` +
-    `${penny ? `${penny} penn` + checkSingular(penny) : ''}`
+    `${dollar ? `${dollar} dollar` + checkSingular('dollar', dollar) : ''}` +
+    `${
+      quarter ? `${quarter} quarter` + checkSingular('quarter', quarter) : ''
+    }` +
+    `${dime ? `${dime} dime` + checkSingular('dime', dime) : ''}` +
+    `${nickel ? `${nickel} nickel` + checkSingular('nickel', nickel) : ''}` +
+    `${penny ? `${penny} penn` + checkSingular('penny', penny) : ''}`
   );
 
   // added a function to check for singular to avoid nested ternary
-  function checkSingular(coin) {
-    if (coin === 1) {
-      if (coin === penny) {
-        return 'y, ';
-      }
-      return `, `;
-    } else {
-      if (coin === penny) {
-        return 'ies';
-      }
-      return 's, ';
+  function checkSingular(coin, amount) {
+    switch (coin) {
+      case 'penny':
+        return amount === 1 ? 'y' : 'ies';
+      default:
+        return amount === 1 ? ', ' : 's, ';
     }
   }
 };
