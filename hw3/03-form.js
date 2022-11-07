@@ -7,7 +7,7 @@ const port = process.env.PORT || 5001;
 // http://localhost:5001/submit should return all the data the user entered
 
 const postHTML = `<html><head></head><body>
-<form method='post'>
+<form method='post' action='/submit'>
 <label for="name">Name: </label>
 <input type="text" name="Name" id="name"><br />
 <label for="email">Email: </label>
@@ -34,19 +34,23 @@ const server = http.createServer((req, res) => {
 
     // write the form to the page
     res.write(postHTML);
+    res.end();
+
+  } else if (req.url === '/submit') {
+    res.writeHead(200, { 'Content-Type': 'text/html' });
 
     // store the data to body
     req.on('data', (chunk) => {
       body += chunk;
     });
-  } else if (req.url === '/submit') {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
+
+    req.on('end', () => {
     const params = new URLSearchParams(body);
     params.forEach((value, key) => {
       output(key, value);
     });
+  })
   }
-  res.end();
 });
 
 server.listen(port, () => {
