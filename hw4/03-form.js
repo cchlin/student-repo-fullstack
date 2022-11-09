@@ -14,20 +14,17 @@ app.post('/submit', (req, res) => {
   const output = (key, value) => {
     const answer = value || 'n/a';
     return `${key}: ${answer}<br />`;
-  }
+  };
 
-  res
-    .status(200)
-    .set({ 'Content-Type': 'text/html' });
+  res.status(200).set({ 'Content-Type': 'text/html' });
 
-  let body = ''
-  for (let item in req.body) {
-    body += output(item, req.body[item])
-  }
-  res.send(body)
+  let body = '';
+  Object.entries(req.body).forEach(([key, value]) => {
+    body += output(key, value);
+  });
+  res.send(body);
 
-  res.end()
-
+  res.end();
 });
 
 app.listen(port, () => {
