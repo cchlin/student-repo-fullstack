@@ -12,6 +12,56 @@ app.set('view engine', 'pug');
 const url = 'https://restcountries.com/v3.1/all';
 
 // Add your code here
+let data = [];
+const getData = (url) => {
+  axios.get(url)
+    .then((response) => {
+      response.data.forEach((country) => {
+        data.push(country);
+      })
+    })
+    .catch((error) => {
+      console.log('An error occured. Please reload the page.')
+    })
+}
+
+getData(url);
+
+const getList = (route) => {
+  let list = [];
+  if (route === '/capitals') {
+    data.sort((a, b) => a.name.common.localeCompare(b.name.common))
+    data.forEach(country => {
+      const capital = country.capital || 'no data'
+      list.push(`${country.name.common} - ${capital}`)
+    })
+    return list;
+  }
+  if (route === '/populous') {
+    data.sort((a, b) => b.population - a.population)
+    data.forEach(country => {
+      if (country.population >= 50000000) {
+        list.push(`${country.name.common} - ${country.population}`)
+      }
+    })
+    return list;
+  }
+  if (route === '/regions') {
+    let map = new Map();
+    data.forEach((country) => {
+      if (!map.has(country.region)) {
+        map.set(country.region, 1)
+      }
+      else {
+        map.set(country.region, map.get(country.region) + 1)
+      }
+    })
+    map.forEach((value, key) => {
+      list.push(`${key} - ${value}`)
+    })
+    return list;
+  }
+}
 
 app.get('/', (req, res) => {
   // render pug template for the index.html file
@@ -26,7 +76,7 @@ app.get('/capitals', (req, res) => {
   // map the output array to create an array with country names and capitals
   // check for empty data in the output array
 
-  let countries = ['Afghanistan', 'Aland Islands', 'Albania'];
+  let countries = getList(req.url)
 
   res.render('page', {
     heading: 'Countries and Capitals',
@@ -39,7 +89,7 @@ app.get('/populous', (req, res) => {
   // sort the resulting array to show the results in order of population
   // map the resulting array into a new array with the country name and formatted population
 
-  let populous = ['China', 'India', 'United States of America'];
+  let populous = getList(req.url);
 
   res.render('page', {
     heading: 'Most Populous Countries',
@@ -51,7 +101,7 @@ app.get('/regions', (req, res) => {
   // reduce the output array in a resulting object that will feature the numbers of countries in each region
   // disregard empty data from the output array
 
-  let regions = ['Asia - 50', 'Europe - 53', 'Africa - 60'];
+  let regions = getList(req.url);
 
   res.render('page', {
     heading: 'Regions of the World',
