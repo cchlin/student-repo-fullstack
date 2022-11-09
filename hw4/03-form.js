@@ -9,8 +9,22 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: false }));
 
 // POST request
-app.post('', (req, res) => {
+app.post('/submit', (req, res) => {
   // Add your code here
+  const output = (key, value) => {
+    const answer = value || 'n/a';
+    return `${key}: ${answer}<br />`;
+  };
+
+  res.status(200).set({ 'Content-Type': 'text/html' });
+
+  let body = '';
+  Object.entries(req.body).forEach(([key, value]) => {
+    body += output(key, value);
+  });
+  res.send(body);
+
+  res.end();
 });
 
 app.listen(port, () => {
